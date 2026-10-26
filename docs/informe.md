@@ -182,7 +182,6 @@ up{namespace="bodega-peirano", endpoint="http"}
 ---
 
 
-* **Lección Técnica en tus Palabras:**
   Demuestra el propósito de los **probes** (`liveness` y `readiness`) de Kubernetes y el mecanismo de autorrecuperación del cluster. Kubernetes no intenta enrutar tráfico a pods caídos, y el monitoreo activo con Prometheus permite a los ingenieros identificar en segundos que el servicio no responde, aislando la causa raíz en la configuración del pod antes de que afecte a toda la infraestructura.
 
 ---
@@ -216,7 +215,7 @@ up{namespace="bodega-peirano", endpoint="http"}
   kubectl set env deployment/catalogo-deployment -n bodega-peirano ARTIFICIAL_DELAY_SECONDS="0"
   ```
   *(O seleccionar la opción 7 en el script interactivo)*.
-* **Lección Técnica en tus Palabras:**
+* **Lección Técnica :**
   En arquitecturas de microservicios, la latencia es un problema contagioso: **se propaga en cascada** aguas arriba. Sin observabilidad con percentiles (p95) y métricas de Gauge en tiempo real, el equipo de soporte culparía erróneamente al microservicio de Pedidos cuando el verdadero causante de la degradación es el Catálogo.
 
 ---
