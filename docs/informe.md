@@ -172,17 +172,17 @@ up{namespace="bodega-peirano", endpoint="http"}
 
 > #### 📸 [EVIDENCIA 1A: CAPTURA DE PANTALLA REQUERIDA]
 
-> ```
-> +-----------------------------------------------------------------------------------+
-> | [![alt text](image-8.png) ![alt text](image-9.png)]   |
-> +-----------------------------------------------------------------------------------+
-> ```
+> 
+> 
+>  ![alt text](image-8.png) ![alt text](image-9.png)
+> 
+>
 >  Se evidencia que Kubernetes detecta las continuas caídas del contenedor y entra en ciclo de back-off exponencial (`CrashLoopBackOff`). Prometheus detecta que el endpoint no responde al scrape HTTP, reportando `up == 0`, lo que visualiza inmediatamente el panel en rojo en Grafana y activa la alerta `CatalogoServiceDown`.
 
 ---
 
 
-
+* **Lección Técnica en tus Palabras:**
   Demuestra el propósito de los **probes** (`liveness` y `readiness`) de Kubernetes y el mecanismo de autorrecuperación del cluster. Kubernetes no intenta enrutar tráfico a pods caídos, y el monitoreo activo con Prometheus permite a los ingenieros identificar en segundos que el servicio no responde, aislando la causa raíz en la configuración del pod antes de que afecte a toda la infraestructura.
 
 ---
@@ -202,11 +202,11 @@ up{namespace="bodega-peirano", endpoint="http"}
 > #### 📸 [EVIDENCIA 2A: CAPTURA DE PANTALLA REQUERIDA]
 
 
-> ```
-> +-----------------------------------------------------------------------------------+
-> | [![alt text](image-17.png) ![alt text](image-16.png)]  |
-> +-----------------------------------------------------------------------------------+
-> ```
+> 
+> 
+>  ![alt text](image-17.png) ![alt text](image-16.png)
+> 
+> 
 >  La captura demuestra que el delay inyectado en el Servicio A (5 segundos) supera el umbral de timeout del cliente reactivo en el Servicio B (4 segundos). El Timer de Micrometer registra el retraso antes del fallo, elevando el p95 y disparando la regla de alerta de latencia.
 
 ---
@@ -237,10 +237,9 @@ up{namespace="bodega-peirano", endpoint="http"}
 > 2. El panel *"Flujo de Pedidos por Segundo"*, donde la serie temporal roja (pedidos rechazados) supera a la verde (aprobados).
 > 3. En Prometheus: La alerta de negocio **`HighOrderRejectionRate`** en estado **FIRING**.
 > 
-> ```
-> +-----------------------------------------------------------------------------------+
-> | ![alt text](image-18.png) ![alt text](image-19.png)  ![alt text](image-20.png)+-----------------------------------------------------------------------------------+
-> ```
+> 
+> 
+> ![alt text](image-18.png) ![alt text](image-19.png)  ![alt text](image-20.png)
 >  Se evidencia que las métricas de negocio instrumentadas con Micrometer (`bodega_pedidos_tasa_rechazo` y `bodega_pedidos_creados_total{estado="rechazado"}`) permiten alertar anomalías funcionales del dominio antes de que los clientes reporten reclamos administrativos.
 
 ---
@@ -265,22 +264,20 @@ A continuación se detallan las 4 evidencias globales que deben ser capturadas e
 
 > #### 📸 [EVIDENCIA 4.1: TARGETS DE PROMETHEUS EN UP]
 
-> ```
-> +-----------------------------------------------------------------------------------+
-> | ![alt text](image-11.png) |
-> +-----------------------------------------------------------------------------------+
-> ```
+> 
+>  ![alt text](image-11.png) 
+> 
 > Demuestra que el Prometheus Operator descubrió correctamente ambos ServiceMonitors en el namespace `bodega-peirano` gracias a la directiva `serviceMonitorSelectorNilUsesHelmValues: false` y que los microservicios exponen sus métricas en formato scrape estándar.
 
 ---
 
 ### Evidencia 2: Captura del Dashboard de Grafana con los 8 paneles funcionando
 
-> ```
-> +-----------------------------------------------------------------------------------+
+> 
+>
 > ![alt text](image-12.png)     |
-> +-----------------------------------------------------------------------------------+
-> ```
+> 
+> 
 > Certifica la correcta integración entre Prometheus como DataSource y Grafana, mostrando métricas reales generadas por el flujo de microservicios.
 
 ---
@@ -288,11 +285,11 @@ A continuación se detallan las 4 evidencias globales que deben ser capturadas e
 ### Evidencia 3: Captura de `kubectl get pods` mostrando todos los pods en Running
 
 > #### 📸 [EVIDENCIA 4.3: ESTADO RUNNING EN KUBERNETES]
-> **Instrucción para la captura:**  
->+-----------------------------------------------------------------------------------+
+>  
+>
 > | [![alt text](image-13.png)]  ![alt text](image-14.png) |
-> +-----------------------------------------------------------------------------------+
-> ```
+>
+> 
 > Demuestra que los contenedores pasaron satisfactoriamente sus sondas de `readinessProbe` y `livenessProbe`, que no presentan problemas de memoria ni de descarga de imágenes (`imagePullPolicy: IfNotPresent`).
 
 ---
@@ -302,11 +299,11 @@ A continuación se detallan las 4 evidencias globales que deben ser capturadas e
 > #### 📸 [EVIDENCIA 4.4: ALERTA EN ESTADO FIRING EN PROMETHEUS]
 
 > 
-> ```
-> +-----------------------------------------------------------------------------------+
-> | [![alt text](image-10.png)]  |
-> +-----------------------------------------------------------------------------------+
-> ```
+> 
+> 
+>  ![alt text](image-10.png) 
+> 
+> 
 > Demuestra que las reglas declaradas en el manifiesto `k8s/prometheus-rules.yaml` son evaluadas periódicamente por Prometheus Operator y alertan oportunamente ante situaciones anómalas tanto de infraestructura como de lógica de negocio.
 
 ---
