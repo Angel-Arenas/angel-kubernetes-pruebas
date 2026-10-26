@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bodega-peirano
+  labels:
+    name: bodega-peirano
+    domain: tienda-de-vinos

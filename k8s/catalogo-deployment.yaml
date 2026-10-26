@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogo-deployment
+  namespace: bodega-peirano
+  labels:
+    app: catalogo-service
+    tier: backend
+    domain: catalogo-vinos
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: catalogo-service
+  template:
+    metadata:
+      labels:
+        app: catalogo-service
+        tier: backend
+        domain: catalogo-vinos
+    spec:
+      containers:
+        - name: catalogo-service
+          image: catalogo-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+          env:
+            - name: SERVER_PORT
+              value: "8081"
+            - name: ARTIFICIAL_DELAY_SECONDS
+              value: "0"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "production"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2

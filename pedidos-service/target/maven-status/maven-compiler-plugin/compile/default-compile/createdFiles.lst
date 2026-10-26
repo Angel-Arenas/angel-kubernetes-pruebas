@@ -1,0 +1,9 @@
+com\bodegapeirano\pedidos\metrics\PedidosMetrics.class
+com\bodegapeirano\pedidos\model\PedidoRequest.class
+com\bodegapeirano\pedidos\model\VinoDto.class
+com\bodegapeirano\pedidos\PedidosServiceApplication.class
+com\bodegapeirano\pedidos\client\CatalogoClient.class
+com\bodegapeirano\pedidos\controller\MetricsRedirectController.class
+com\bodegapeirano\pedidos\service\PedidosService.class
+com\bodegapeirano\pedidos\controller\PedidosController.class
+com\bodegapeirano\pedidos\model\Pedido.class

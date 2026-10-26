@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pedidos-deployment
+  namespace: bodega-peirano
+  labels:
+    app: pedidos-service
+    tier: backend
+    domain: pedidos-vinos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pedidos-service
+  template:
+    metadata:
+      labels:
+        app: pedidos-service
+        tier: backend
+        domain: pedidos-vinos
+    spec:
+      containers:
+        - name: pedidos-service
+          image: pedidos-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8082
+              protocol: TCP
+          env:
+            - name: SERVER_PORT
+              value: "8082"
+            - name: CATALOGO_SERVICE_URL
+              value: "http://catalogo-service.bodega-peirano.svc.cluster.local:8081"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "production"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2

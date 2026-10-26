@@ -1,0 +1,68 @@
+# ==============================================================================
+# Configuración personalizada para kube-prometheus-stack (Helm)
+# Proyecto: Bodega Peirano - Microservicios Kubernetes con Prometheus & Grafana
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Configuración de Prometheus
+# ------------------------------------------------------------------------------
+prometheus:
+  service:
+    type: NodePort
+    nodePort: 30090
+  prometheusSpec:
+    # PERMITIR el descubrimiento de ServiceMonitors en cualquier namespace
+    # sin requerir que tengan la etiqueta release=prometheus
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelector: {}
+
+    # PERMITIR el descubrimiento de PrometheusRules (Alertas) en cualquier namespace
+    ruleSelectorNilUsesHelmValues: false
+    ruleNamespaceSelector: {}
+    ruleSelector: {}
+
+    # Intervalo de scrape predeterminado
+    scrapeInterval: 10s
+    evaluationInterval: 10s
+
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1024Mi
+
+# ------------------------------------------------------------------------------
+# Configuración de Grafana
+# ------------------------------------------------------------------------------
+grafana:
+  enabled: true
+  adminPassword: "bodega-peirano-2026"
+  service:
+    type: NodePort
+    nodePort: 31000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# ------------------------------------------------------------------------------
+# Configuración de Alertmanager
+# ------------------------------------------------------------------------------
+alertmanager:
+  service:
+    type: NodePort
+    nodePort: 30093
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi

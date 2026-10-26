@@ -1,0 +1,6 @@
+com\bodegapeirano\catalogo\metrics\CatalogoMetrics.class
+com\bodegapeirano\catalogo\service\VinosService.class
+com\bodegapeirano\catalogo\CatalogoServiceApplication.class
+com\bodegapeirano\catalogo\model\Vino.class
+com\bodegapeirano\catalogo\controller\MetricsRedirectController.class
+com\bodegapeirano\catalogo\controller\VinosController.class

@@ -1,0 +1,74 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: bodega-peirano-alertas
+  namespace: bodega-peirano
+  labels:
+    app: bodega-peirano
+    release: prometheus
+    role: alert-rules
+spec:
+  groups:
+    - name: BodegaPeiranoDisponibilidadAlerts
+      rules:
+        # Alerta 1: Servicio A Caído
+        - alert: CatalogoServiceDown
+          expr: up{namespace="bodega-peirano", endpoint="http"} == 0 and on(pod) kube_pod_info{pod=~"catalogo-deployment-.*"}
+          for: 30s
+          labels:
+            severity: critical
+            service: catalogo-service
+            domain: bodega-peirano
+          annotations:
+            summary: "Servicio A (Catálogo de Vinos) está fuera de servicio"
+            description: "El pod de catálogo en el namespace bodega-peirano ha dejado de responder al scrape de Prometheus."
+
+        # Alerta 2: Servicio B Caído
+        - alert: PedidosServiceDown
+          expr: up{namespace="bodega-peirano", endpoint="http"} == 0 and on(pod) kube_pod_info{pod=~"pedidos-deployment-.*"}
+          for: 30s
+          labels:
+            severity: critical
+            service: pedidos-service
+            domain: bodega-peirano
+          annotations:
+            summary: "Servicio B (API de Pedidos) está fuera de servicio"
+            description: "El pod de pedidos en el namespace bodega-peirano ha dejado de responder al scrape de Prometheus."
+
+    - name: BodegaPeiranoNegocioAlerts
+      rules:
+        # Alerta 3 (Regla de Negocio): Tasa Alta de Rechazo de Pedidos
+        - alert: HighOrderRejectionRate
+          expr: (sum(rate(bodega_pedidos_creados_total{estado="rechazado"}[2m])) / (sum(rate(bodega_pedidos_creados_total[2m])) > 0)) * 100 > 30
+          for: 1m
+          labels:
+            severity: warning
+            service: pedidos-service
+            domain: bodega-peirano
+          annotations:
+            summary: "Tasa crítica de rechazo de pedidos de vino (> 30%)"
+            description: "Más del 30% de los pedidos de clientes están siendo rechazados por falta de stock o vino inexistente."
+
+        # Alerta 4 (Regla de Negocio): Stock General Crítico en Bodega
+        - alert: CriticalWineStockLevel
+          expr: (bodega_catalogo_stock or bodega_catalogo_stock_total) < 30
+          for: 1m
+          labels:
+            severity: warning
+            service: catalogo-service
+            domain: bodega-peirano
+          annotations:
+            summary: "Stock de vinos en Bodega Peirano por debajo del umbral mínimo"
+            description: "El inventario total de botellas en la bodega ha descendido de 30 unidades disponibles."
+
+        # Alerta 5 (Casuística de Servicio Lento): Latencia Excesiva en Comunicación
+        - alert: SlowOrderProcessingLatency
+          expr: (rate(bodega_pedidos_procesamiento_duracion_seconds_sum[2m]) / (rate(bodega_pedidos_procesamiento_duracion_seconds_count[2m]) > 0)) > 1.5
+          for: 30s
+          labels:
+            severity: warning
+            service: pedidos-service
+            domain: bodega-peirano
+          annotations:
+            summary: "Latencia alta en validación y procesamiento de pedidos (> 1.5s)"
+            description: "La comunicación HTTP entre el Servicio B y el Servicio A está demorando más de 1.5 segundos."

@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: catalogo-servicemonitor
+  namespace: bodega-peirano
+  labels:
+    app: catalogo-service
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: catalogo-service
+  namespaceSelector:
+    matchNames:
+      - bodega-peirano
+  endpoints:
+    - port: http
+      path: /actuator/prometheus
+      interval: 10s
+      scrapeTimeout: 5s
