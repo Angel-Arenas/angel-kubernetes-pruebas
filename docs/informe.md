@@ -182,7 +182,7 @@ up{namespace="bodega-peirano", endpoint="http"}
 ---
 
 
-* **Lección Técnica en tus Palabras:**
+
   Demuestra el propósito de los **probes** (`liveness` y `readiness`) de Kubernetes y el mecanismo de autorrecuperación del cluster. Kubernetes no intenta enrutar tráfico a pods caídos, y el monitoreo activo con Prometheus permite a los ingenieros identificar en segundos que el servicio no responde, aislando la causa raíz en la configuración del pod antes de que afecte a toda la infraestructura.
 
 ---
